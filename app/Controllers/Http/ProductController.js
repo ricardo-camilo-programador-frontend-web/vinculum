@@ -1,5 +1,41 @@
 'use strict'
 
+/**
+ * @swagger
+ * /products:
+ *   get:
+ *     summary: Retorna todos os produtos
+ *     tags: [Products]
+ *     responses:
+ *       200:
+ *         description: Uma lista de produtos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     format: uuid
+ *                     description: O identificador   nico do produto
+ *                   nome:
+ *                     type: string
+ *                     description: O nome do produto
+ *                   descricao:
+ *                     type: string
+ *                     description: A descri o do produto
+ *                   created_at:
+ *                     type: string
+ *                     format: date-time
+ *                     description: Data e hora em que o produto foi criado
+ *                   updated_at:
+ *                     type: string
+ *                     format: date-time
+ *                     description: Data e hora em que o produto foi atualizado
+ */
+
 const Product = use('App/Models/Product')
 
 class ProductController {
