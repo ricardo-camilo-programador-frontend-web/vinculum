@@ -11,7 +11,8 @@
  *         in: path
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
+ *           format: uuid
  *     requestBody:
  *       required: true
  *       content:
@@ -22,7 +23,8 @@
  *               category_ids:
  *                 type: array
  *                 items:
- *                   type: integer
+ *                   type: string
+ *                   format: uuid
  *     responses:
  *       200:
  *         description: Categorias adicionadas com sucesso
