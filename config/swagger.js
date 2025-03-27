@@ -22,6 +22,55 @@ const options = {
           bearerFormat: 'JWT',
         },
       },
+      schemas: {
+        Category: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid'
+            },
+            nome: {
+              type: 'string'
+            },
+            created_at: {
+              type: 'string',
+              format: 'date-time'
+            },
+            updated_at: {
+              type: 'string',
+              format: 'date-time'
+            }
+          }
+        },
+        Product: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              format: 'uuid'
+            },
+            nome: {
+              type: 'string'
+            },
+            descricao: {
+              type: 'string'
+            },
+            preco: {
+              type: 'number',
+              format: 'float'
+            },
+            created_at: {
+              type: 'string',
+              format: 'date-time'
+            },
+            updated_at: {
+              type: 'string',
+              format: 'date-time'
+            }
+          }
+        }
+      }
     },
   },
   apis: ['./app/Controllers/Http/*.js'],
