@@ -50,19 +50,19 @@ Route.get('/api-docs', ({ response }) => {
   `)
 })
 
-// Produtos
-Route.get('/produtos', 'ProductController.index')
-Route.post('/produtos', 'ProductController.store')
-Route.get('/produtos/:id', 'ProductController.show')
-Route.put('/produtos/:id', 'ProductController.update')
-Route.delete('/produtos/:id', 'ProductController.destroy')
+// Products
+Route.get('/products', 'ProductController.index')
+Route.post('/products', 'ProductController.store')
+Route.get('/products/:id', 'ProductController.show')
+Route.put('/products/:id', 'ProductController.update')
+Route.delete('/products/:id', 'ProductController.destroy')
 
-// Categorias
-Route.get('/categorias', 'CategoryController.index')
-Route.post('/categorias', 'CategoryController.store')
-Route.put('/categorias/:id', 'CategoryController.update')
-Route.delete('/categorias/:id', 'CategoryController.destroy')
+// Categories
+Route.get('/categories', 'CategoryController.index')
+Route.post('/categories', 'CategoryController.store')
+Route.put('/categories/:id', 'CategoryController.update')
+Route.delete('/categories/:id', 'CategoryController.destroy')
 
 // Relacionamento Produto-Categoria
-Route.post('/produtos/:id/categorias', 'ProductCategoryController.store')
-Route.delete('/produtos/:id/categorias', 'ProductCategoryController.destroy')
+Route.post('/products/:id/categories', 'ProductCategoryController.store')
+Route.delete('/products/:id/categories', 'ProductCategoryController.destroy')
