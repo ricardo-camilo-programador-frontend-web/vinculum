@@ -30,7 +30,10 @@ const options = {
               type: 'string',
               format: 'uuid'
             },
-            nome: {
+            name: {
+              type: 'string'
+            },
+            description: {
               type: 'string'
             },
             created_at: {
@@ -50,13 +53,13 @@ const options = {
               type: 'string',
               format: 'uuid'
             },
-            nome: {
+            name: {
               type: 'string'
             },
-            descricao: {
+            description: {
               type: 'string'
             },
-            preco: {
+            price: {
               type: 'number',
               format: 'float'
             },
