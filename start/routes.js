@@ -1,33 +1,18 @@
 'use strict'
 
-/*
-|--------------------------------------------------------------------------
-| Routes
-|--------------------------------------------------------------------------
-|
-| Http routes are entry points to your web application. You can create
-| routes for different URLs and bind Controller actions to them.
-|
-| A complete guide on routing is available here.
-| http://adonisjs.com/docs/4.1/routing
-|
-*/
-
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 const swaggerSpec = require('../config/swagger')
 
-// Pagina inicial
 Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 })
 
-// Documentação Swagger
-Route.get('/api-docs.json', ({ response }) => {
+Route.get('/docs.json', ({ response }) => {
   response.send(swaggerSpec)
 })
 
-Route.get('/api-docs', ({ response }) => {
+Route.get('/docs', ({ response }) => {
   response.send(`
     <!DOCTYPE html>
     <html>
@@ -40,7 +25,7 @@ Route.get('/api-docs', ({ response }) => {
       <script>
         window.onload = () => {
           SwaggerUIBundle({
-            url: '/api-docs.json',
+            url: '/docs.json',
             dom_id: '#swagger-ui'
           })
         }
@@ -60,9 +45,10 @@ Route.delete('/products/:id', 'ProductController.destroy')
 // Categories
 Route.get('/categories', 'CategoryController.index')
 Route.post('/categories', 'CategoryController.store')
+Route.get('/categories/:id', 'CategoryController.show')
 Route.put('/categories/:id', 'CategoryController.update')
 Route.delete('/categories/:id', 'CategoryController.destroy')
 
-// Relacionamento Produto-Categoria
+// Relacionamento produto-Categorie
 Route.post('/products/:id/categories', 'ProductCategoryController.store')
 Route.delete('/products/:id/categories', 'ProductCategoryController.destroy')
