@@ -6,7 +6,8 @@ class CategoriesSchema extends Schema {
   up() {
     this.create('categories', (table) => {
       table.uuid('id').primary()
-      table.string('nome').notNullable().unique()
+      table.string('name').notNullable().unique()
+      table.text('description')
       table.timestamps()
     })
   }
