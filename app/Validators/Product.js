@@ -2,13 +2,14 @@
 
 class Product {
 	get validateAll() {
-		return true // Valida todos os campos
+		return true
 	}
 
 	get rules() {
 		return {
-			nome: 'required|string',
-			descricao: 'string'
+			name: 'required|string',
+			description: 'string',
+			price: 'required|number'
 		}
 	}
 }
