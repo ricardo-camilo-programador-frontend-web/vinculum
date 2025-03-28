@@ -3,37 +3,101 @@
 /**
  * @swagger
  * /products:
- *   get:
- *     summary: Retorna todos os produtos
+ *   post:
+ *     summary: Cria um novo produto
  *     tags: [Products]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *                 description: O nome do produto
+ *               descricao:
+ *                 type: string
+ *                 description: A descri o do produto
  *     responses:
  *       200:
- *         description: Uma lista de produtos
+ *         description: Produto criado com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                     format: uuid
- *                     description: O identificador   nico do produto
- *                   nome:
- *                     type: string
- *                     description: O nome do produto
- *                   descricao:
- *                     type: string
- *                     description: A descri o do produto
- *                   created_at:
- *                     type: string
- *                     format: date-time
- *                     description: Data e hora em que o produto foi criado
- *                   updated_at:
- *                     type: string
- *                     format: date-time
- *                     description: Data e hora em que o produto foi atualizado
+ *               $ref: '#/components/schemas/Product'
+ * /products/{id}:
+ *   get:
+ *     summary: Retorna um produto
+ *     tags: [Products]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Um produto
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       404:
+ *         description: Produto n  o encontrado
+ *
+ *   put:
+ *     summary: Atualiza um produto
+ *     tags: [Products]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *                 description: O nome do produto
+ *               descricao:
+ *                 type: string
+ *                 description: A descrição do produto
+ *     responses:
+ *       200:
+ *         description: Produto atualizado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       404:
+ *         description: Produto não encontrado
+ *       400:
+ *         description: Bad request
+ *
+ *   delete:
+ *     summary: Deleta um produto
+ *     tags: [Products]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Produto deletado com sucesso
+ *       404:
+ *         description: Produto não encontrado
+ *
  */
 
 const Product = use('App/Models/Product')
@@ -46,8 +110,8 @@ class ProductController {
   }
 
   async store({ request, response }) {
-    const { validateAll } = use('Validator')
-    const validation = await validateAll(request.all(), new Product().rules)
+    const Validator = use('Validator')
+    const validation = await Validator.validate(request.all(), new Product().rules)
     if (validation.fails()) {
       return response.status(400).send(validation.messages())
     }
@@ -64,8 +128,8 @@ class ProductController {
   }
 
   async update({ params, request, response }) {
-    const { validateAll } = use('Validator')
-    const validation = await validateAll(request.all(), new Product().rules)
+    const Validator = use('Validator')
+    const validation = await Validator.validate(request.all(), new Product().rules)
     if (validation.fails()) {
       return response.status(400).send(validation.messages())
     }
