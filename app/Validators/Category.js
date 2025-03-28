@@ -7,7 +7,8 @@ class Category {
 
 	get rules() {
 		return {
-			nome: 'required|string|unique:categories'
+			name: 'required|string|unique:categories',
+			description: 'string'
 		}
 	}
 }
