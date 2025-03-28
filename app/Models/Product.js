@@ -1,22 +1,22 @@
 'use strict'
 
-const Model = use('Model')
-const { v4: uuidv4 } = require('uuid')
+const Model = use("Model")
+const { v4: uuidv4 } = require("uuid")
 
 class Product extends Model {
 	static boot() {
 		super.boot()
-		this.addHook('beforeCreate', async (product) => {
+		this.addHook("beforeCreate", async product => {
 			product.id = uuidv4()
 		})
 	}
 
 	static get table() {
-		return 'products'
+		return "products"
 	}
 
 	static get primaryKey() {
-		return 'id'
+		return "id"
 	}
 
 	static get incrementing() {
@@ -25,14 +25,13 @@ class Product extends Model {
 
 	get rules() {
 		return {
-			nome: 'required|string',
-			descricao: 'string'
+			name: "required|string",
+			description: "string"
 		}
 	}
 
 	categories() {
-		return this.belongsToMany('App/Models/Category')
-			.pivotTable('produto_categoria')
+		return this.belongsToMany("App/Models/Category", "product_id", "category_id", "id", "id").pivotTable("product_category")
 	}
 }
 
