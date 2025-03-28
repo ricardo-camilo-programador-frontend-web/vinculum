@@ -6,8 +6,9 @@ class ProductsSchema extends Schema {
   up() {
     this.create('products', (table) => {
       table.uuid('id').primary()
-      table.string('nome').notNullable()
-      table.text('descricao')
+      table.string('name').notNullable()
+      table.text('description')
+      table.decimal('price', 8, 2).notNullable()
       table.timestamps()
     })
   }
