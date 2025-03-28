@@ -1,13 +1,13 @@
 'use strict'
 
 const Model = use('Model')
-const uuid = require('uuid/v4')
+const { v4: uuidv4 } = require('uuid')
 
 class Category extends Model {
 	static boot() {
 		super.boot()
 		this.addHook('beforeCreate', async (category) => {
-			category.id = uuid()
+			category.id = uuidv4()
 		})
 	}
 
