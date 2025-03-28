@@ -31,6 +31,116 @@
  *                     type: string
  *                     format: date-time
  *                     description: Data e hora em que a categoria foi atualizada
+ *   post:
+ *     summary: Cria uma nova categoria
+ *     tags: [Categories]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *                 description: O nome da categoria
+ *     responses:
+ *       200:
+ *         description: Categoria criada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Category'
+ *       400:
+ *         description: Bad request
+ *
+ * /categories/{id}:
+ *   get:
+ *     summary: Retorna uma categoria
+ *     tags: [Categories]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Uma categoria
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Category'
+ *       404:
+ *         description: Categoria n  o encontrada
+ *
+ *   put:
+ *     summary: Atualiza uma categoria
+ *     tags: [Categories]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *                 description: O nome da categoria
+ *     responses:
+ *       200:
+ *         description: Categoria atualizada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Category'
+ *       404:
+ *         description: Categoria n  o encontrada
+ *
+ *   delete:
+ *     summary: Deleta uma categoria
+ *     tags: [Categories]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Categoria deletada com sucesso
+ *       404:
+ *         description: Categoria n  o encontrada
+ *
+ * /categories/{id}:
+ *   get:
+ *     summary: Retorna uma categoria
+ *     tags: [Categories]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Uma categoria
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Category'
+ *       404:
+ *         description: Categoria n  o encontrada
  */
 
 const { use } = require("@adonisjs/fold");
