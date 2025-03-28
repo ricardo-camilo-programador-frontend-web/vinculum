@@ -1,13 +1,13 @@
 'use strict'
 
 const Model = use('Model')
-const uuid = require('uuid/v4')
+const { v4: uuidv4 } = require('uuid')
 
 class Product extends Model {
 	static boot() {
 		super.boot()
 		this.addHook('beforeCreate', async (product) => {
-			product.id = uuid()
+			product.id = uuidv4()
 		})
 	}
 
@@ -21,6 +21,13 @@ class Product extends Model {
 
 	static get incrementing() {
 		return false
+	}
+
+	get rules() {
+		return {
+			nome: 'required|string',
+			descricao: 'string'
+		}
 	}
 
 	categories() {
