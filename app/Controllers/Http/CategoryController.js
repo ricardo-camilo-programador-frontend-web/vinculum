@@ -2,37 +2,39 @@
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     Category:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           format: uuid
+ *         name:
+ *           type: string
+ *         description:
+ *           type: string
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *         updated_at:
+ *           type: string
+ *           format: date-time
  * /categories:
  *   get:
- *     summary: Retorna todas as categorias
+ *     summary: Returns all categories
  *     tags: [Categories]
  *     responses:
  *       200:
- *         description: Uma lista de categorias
+ *         description: A list of categories
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Category'
- *                 properties:
- *                   id:
- *                     type: string
- *                     format: uuid
- *                     description: O identificador   nico da categoria
- *                   nome:
- *                     type: string
- *                     description: O nome da categoria
- *                   created_at:
- *                     type: string
- *                     format: date-time
- *                     description: Data e hora em que a categoria foi criada
- *                   updated_at:
- *                     type: string
- *                     format: date-time
- *                     description: Data e hora em que a categoria foi atualizada
  *   post:
- *     summary: Cria uma nova categoria
+ *     summary: Creates a new category
  *     tags: [Categories]
  *     requestBody:
  *       required: true
@@ -41,12 +43,13 @@
  *           schema:
  *             type: object
  *             properties:
- *               nome:
+ *               name:
  *                 type: string
- *                 description: O nome da categoria
+ *               description:
+ *                 type: string
  *     responses:
  *       200:
- *         description: Categoria criada com sucesso
+ *         description: Category created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -56,7 +59,7 @@
  *
  * /categories/{id}:
  *   get:
- *     summary: Retorna uma categoria
+ *     summary: Returns a category
  *     tags: [Categories]
  *     parameters:
  *       - name: id
@@ -67,16 +70,15 @@
  *           format: uuid
  *     responses:
  *       200:
- *         description: Uma categoria
+ *         description: A category
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Category'
  *       404:
- *         description: Categoria n  o encontrada
- *
+ *         description: Category not found
  *   put:
- *     summary: Atualiza uma categoria
+ *     summary: Updates a category
  *     tags: [Categories]
  *     parameters:
  *       - name: id
@@ -92,21 +94,21 @@
  *           schema:
  *             type: object
  *             properties:
- *               nome:
+ *               name:
  *                 type: string
- *                 description: O nome da categoria
+ *               description:
+ *                 type: string
  *     responses:
  *       200:
- *         description: Categoria atualizada com sucesso
+ *         description: Category updated successfully
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Category'
  *       404:
- *         description: Categoria n  o encontrada
- *
+ *         description: Category not found
  *   delete:
- *     summary: Deleta uma categoria
+ *     summary: Deletes a category
  *     tags: [Categories]
  *     parameters:
  *       - name: id
@@ -117,58 +119,44 @@
  *           format: uuid
  *     responses:
  *       200:
- *         description: Categoria deletada com sucesso
+ *         description: Category deleted successfully
  *       404:
- *         description: Categoria n  o encontrada
- *
- * /categories/{id}:
- *   get:
- *     summary: Retorna uma categoria
- *     tags: [Categories]
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *     responses:
- *       200:
- *         description: Uma categoria
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Category'
- *       404:
- *         description: Categoria n  o encontrada
+ *         description: Category not found
  */
 
-const { use } = require("@adonisjs/fold");
-const Category = use("App/Models/Category");
+const Category = use("App/Models/Category")
 
 class CategoryController {
   async index() {
-    return await Category.all();
+    const categories = await Category.all()
+    return categories
   }
 
   async store({ request }) {
-    const categoryData = request.only(["nome"]);
-    const newCategory = await Category.create(categoryData);
-    return newCategory;
+    const { name, description } = request.only(["name", "description"])
+    const newCategory = await Category.create({ name, description })
+    return newCategory
+  }
+
+  async show({ params }) {
+    const foundCategory = await Category.findOrFail(params.id)
+    await foundCategory.load("products")
+    return foundCategory
   }
 
   async update({ params, request }) {
-    const category = await Category.findOrFail(params.id);
-    const categoryData = request.only(["nome"]);
-    category.merge(categoryData);
-    await category.save();
-    return category;
+    const foundCategory = await Category.findOrFail(params.id)
+    const { name, description } = request.only(["name", "description"])
+    foundCategory.merge({ name, description })
+    await foundCategory.save()
+    return foundCategory
   }
 
   async destroy({ params }) {
-    const category = await Category.findOrFail(params.id);
-    await category.delete();
+    const foundCategory = await Category.findOrFail(params.id)
+    await foundCategory.delete()
+    return { message: "Category deleted" }
   }
 }
 
-module.exports = CategoryController;
+module.exports = CategoryController
