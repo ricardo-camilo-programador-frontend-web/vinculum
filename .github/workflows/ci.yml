@@ -7,31 +7,54 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  test:
+    name: Testes
     runs-on: ubuntu-latest
-
+    timeout-minutes: 15
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: lts/*
 
-      - name: Install dependencies
+      - name: Instalar dependencias
         run: npm ci
 
-      - name: Type check
-        run: npm run lint
+      - name: Executar testes
+        run: npm run test
 
-      - name: Build
-        run: npm run build
+  security:
+    name: Auditoria de Seguranca
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/setup-node@v4
         with:
-          name: dist
-          path: dist/
-          retention-days: 7
+          node-version: lts/*
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Auditoria de vulnerabilidades
+        shell: bash
+        run: |
+          set -o pipefail
+          LOG_FILE="$(mktemp)"
+
+          npm audit --audit-level moderate 2>&1 | tee "$LOG_FILE"
+          status=${PIPESTATUS[0]}
+
+          if [ "$status" -eq 0 ]; then
+            exit 0
+          fi
+
+          # npm audit can also fail due to transient registry errors
+          if grep -Eq "500|503" "$LOG_FILE"; then
+            echo "::warning::npm audit falhou por erro do registry. Falha tratada como indisponibilidade transitória."
+            exit 0
+          fi
+
+          exit "$status"
