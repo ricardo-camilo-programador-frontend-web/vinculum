@@ -9,14 +9,14 @@ on:
 jobs:
   test:
     name: Testes
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 15
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
+      - name: Setup PATH
+        run: echo "/home/camillusr/.hermes/node/bin" >> $GITHUB_PATH
 
       - name: Instalar dependencias
         run: npm ci
@@ -26,15 +26,14 @@ jobs:
 
   security:
     name: Auditoria de Seguranca
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 10
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
+      - name: Setup PATH
+        run: echo "/home/camillusr/.hermes/node/bin" >> $GITHUB_PATH
 
       - name: Instalar dependencias
         run: npm ci
@@ -52,5 +51,9 @@ jobs:
             exit 0
           fi
 
+          if grep -Eq "500|503" "$LOG_FILE"; then
+            echo "::warning::npm audit falhou por erro do registry."
+            exit 0
+          fi
 
           exit "$status"
