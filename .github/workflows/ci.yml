@@ -11,12 +11,16 @@ jobs:
     name: Testes
     runs-on: self-hosted
     timeout-minutes: 15
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup PATH
         run: echo "/usr/local/bin" >> $GITHUB_PATH
+      - name: Cache npm
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
 
       - name: Instalar dependencias
         run: npm ci
@@ -34,6 +38,11 @@ jobs:
 
       - name: Setup PATH
         run: echo "/usr/local/bin" >> $GITHUB_PATH
+      - name: Cache npm
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
 
       - name: Instalar dependencias
         run: npm ci
@@ -57,3 +66,25 @@ jobs:
           fi
 
           exit "$status"
+
+  sonar:
+    name: Analise SonarQube
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PATH
+        run: echo "/usr/local/bin" >> $GITHUB_PATH
+      - name: Cache npm
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+
+      - name: Instalar dependencias
+        run: pnpm install --ignore-scripts
+
+      - name: Run SonarScanner
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: /opt/sonar-scanner/bin/sonar-scanner
