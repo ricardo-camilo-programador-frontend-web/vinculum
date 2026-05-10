@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     name: Testes
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 15
     continue-on-error: true
     steps:
@@ -27,7 +27,7 @@ jobs:
 
   security:
     name: Auditoria de Seguranca
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 10
     continue-on-error: true
     steps:
