@@ -35,20 +35,70 @@ Route.get('/docs', ({ response }) => {
   `)
 })
 
-// Products
-Route.get('/products', 'ProductController.index')
-Route.post('/products', 'ProductController.store')
-Route.get('/products/:id', 'ProductController.show')
-Route.put('/products/:id', 'ProductController.update')
-Route.delete('/products/:id', 'ProductController.destroy')
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           example: 1
+ *         username:
+ *           type: string
+ *           example: johndoe
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: john@example.com
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *         updated_at:
+ *           type: string
+ *           format: date-time
+ */
 
-// Categories
-Route.get('/categories', 'CategoryController.index')
-Route.post('/categories', 'CategoryController.store')
-Route.get('/categories/:id', 'CategoryController.show')
-Route.put('/categories/:id', 'CategoryController.update')
-Route.delete('/categories/:id', 'CategoryController.destroy')
+// Authentication Routes (Public)
+Route.group(() => {
+  Route.post('/register', 'AuthController.register')
+  Route.post('/login', 'AuthController.login')
+  Route.post('/refresh', 'AuthController.refresh')
+}).prefix('/auth')
 
-// Relacionamento produto-Categorie
-Route.post('/products/:id/categories', 'ProductCategoryController.store')
-Route.delete('/products/:id/categories', 'ProductCategoryController.destroy')
+// Authentication Routes (Protected)
+Route.group(() => {
+  Route.post('/logout', 'AuthController.logout')
+  Route.get('/me', 'AuthController.me')
+  Route.put('/password', 'AuthController.changePassword')
+}).prefix('/auth').middleware(['auth:jwt'])
+
+// Products (Protected)
+Route.group(() => {
+  Route.get('/', 'ProductController.index')
+  Route.post('/', 'ProductController.store')
+  Route.get('/:id', 'ProductController.show')
+  Route.put('/:id', 'ProductController.update')
+  Route.delete('/:id', 'ProductController.destroy')
+}).prefix('/products').middleware(['auth:jwt'])
+
+// Categories (Protected)
+Route.group(() => {
+  Route.get('/', 'CategoryController.index')
+  Route.post('/', 'CategoryController.store')
+  Route.get('/:id', 'CategoryController.show')
+  Route.put('/:id', 'CategoryController.update')
+  Route.delete('/:id', 'CategoryController.destroy')
+}).prefix('/categories').middleware(['auth:jwt'])
+
+// Product-Category Relationship (Protected)
+Route.group(() => {
+  Route.post('/:id/categories', 'ProductCategoryController.store')
+  Route.delete('/:id/categories', 'ProductCategoryController.destroy')
+}).prefix('/products').middleware(['auth:jwt'])
